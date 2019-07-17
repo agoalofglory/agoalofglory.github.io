@@ -59,11 +59,11 @@ sidebar:
     author_links:
         github:
             title: global.github
-            url: https://github.com/
+            url: https://github.com/agoalofglory
             icon: fab fa-github
         stack_overflow:
             title: global.stack_overflow
-            url: http://stackoverflow.com/users
+            url: https://stackoverflow.com/users/11778793/agoalofglory
             icon: fab fa-stack-overflow
         twitter:
             title: global.twitter
@@ -71,7 +71,7 @@ sidebar:
             icon: fab fa-twitter
         facebook:
             title: global.facebook
-            url: https://facebook.com/
+            url: https://www.facebook.com/glory.cho.165
             icon: fab fa-facebook
         google_plus:
             title: global.google_plus

@@ -1,0 +1,752 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="A Goal Of Glory Blog">
+    <title>나의 최초 플루터 앱 Part1 - A Goal Of Glory Blog</title>
+    <meta name="author" content="Borris Cho">
+    
+        <meta name="keywords" content="flutter">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Borris Cho","sameAs":["https://github.com/agoalofglory","https://stackoverflow.com/users/11778793/agoalofglory","https://twitter.com/","https://www.facebook.com/glory.cho.165","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"],"image":"profile.PNG"},"articleBody":"\n\n\n해당 소스는 Flutter 공식 사이트를 참고 했어요.\n\n객체지향코드와 기본적인 프로그래밍에 익숙하다면 이번장에서 만드는 Flutter 코드가 이해가 될꺼라 생각이 들어요.\n만들어볼 앱은 제한이 없는 스크롤 리스트 입니다. 여기서 배워갈 점은 아래와 같아요.\n\nFlutter App을 작성하는 방법.\nFlutter App의 기본 구조.\n검색과 패키지들을 사용해서 기능을 확장하는 방법.\n빠른 개발을 Hot reload 사용 방법.\nStateful widget을 개발하는 방법.\n무한하고 lazy하게 로드된 리스트를 생성하는 방법.\n\nFlutter App 만들기새로운 플루터 앱을 만들어 봅니다. 이름은 flutter_first_app 할께요.\n이상 없이 생성이 되면 에뮬레이터를 실행시키고 새로 생성된 Flutter app을 기동시키세요.\n우하단에 파란색 버튼과 You have pushed the button this many time: 0이라는 글씨가 중앙에 뜬 앱이 보인다면 이상없이 기본 Flutter App이 기동이 된거에요.\n1. lib/main.dart파일을 아래 코드로 변경해주세요.main.dartmain.dart1234567891011121314151617181920import 'package:flutter/material.dart';void main() =&gt; runApp(MyApp());class MyApp extends StatelessWidget &#123;  @override  Widget build(BuildContext context) &#123;    return MaterialApp(      title: 'Welcome to Flutter',      home: Scaffold(        appBar: AppBar(          title: Text('Welcome to Flutter'),        ),        body: Center(          child: Text('Hello World'),        ),      ),    );  &#125;&#125;\n\nHot Reload기능으로 인해서 코드를 저장시 실행된 애뮬레이터에 해당 코드가 반영됨을 확인 할 수 있어요. Hello World가 중앙에 뜨면 이상없이 적용이 된거에요.\n확인\n\nMaterial App을 만들었습니다. Material은 모바일과 웹에서 시각적인 디자인 언어에요, Flutter는 많은 Material Widget들을 제공해줍니다.\nMain 함수에서 Arrow(=&gt;) 표기법을 사용했어요. 한줄에서 표현이 가능한 함수나 메소드는 Arrow를 사용하세요.\nMyApp은 StatelessWidget을 확장한 Widget이에요. Flutter는 대부분이 Widget입니다. alignment, padding, layout도 Widget이에요.\nScaffold Widget을 사용했어요. 이건 기본적으로 AppBar, Title 속성 및 Home Screen 영역을 담당하고 자식 Widget Tree를 유지하는 body 속성을 제공합니다.\nWidget의 주요 작업은 build() 함수를 제공하는 거에요. build는 위젯을 어떻게 표시할지에 대한 코드들이 작성이 된답니다.\n예제에서는 Center Widget을 사용해서 수직, 수평으로 중앙에 Text Widget을 표시해주고 있습니다.\n\n2. 외부 패키지 사용하기english_word라는 외부 패키지를 사용해봐요. english_word는 가장 많이 사용되는 영어단어의 제공과 몇몇의 기능을 제공합니다.\nFlutter Pub(https://pub.dev/flutter) 사이트에서 사람들이 올려놓은 외부 패키지를 검색해보세요. english_word를 검색해보세요.\n아래처럼 pubspec.yaml에 english_word를 작성합니다.\npubspec.yamlpubspec.yaml1234dependencies:  flutter:    sdk: flutter  english_words: ^3.1.0\n\n이상없이 추가 되면 ‘flutter pub get’을 터미널에 입력하거나 Tool에 표시되는 ‘package get’을 눌러봐요. 이건 선언한 소스를 앱에서 사용할 수 있게 다운받고 설정을 합니다. 이것은 pubspec.lock을 자동으로 생성하며 프로젝트에 끌어온 모든 패키지의 목록을 파일로 저장하고 버전 관리 합니다.\n아래와 같이 main.dart에 english_word를 선언 해보죠.\nmain.dartmain.dart12import 'package:flutter/material.dart';import 'package:english_words/english_words.dart';\n\n자 english_word를 사용하여 Hello world를 english_word가 제공해주는 단어로 변경해보죠.\nmain.dartmain.dart123456789101112131415161718class MyApp extends StatelessWidget &#123;  @override  Widget build(BuildContext context) &#123;    final wordPair = WordPair.random();    return MaterialApp(      title: 'Welcome to Flutter',      home: Scaffold(        appBar: AppBar(          title: Text('Welcome to Flutter'),        ),        body: Center(          child: Text(wordPair.asPascalCase),        ),      ),    );  &#125;&#125;\n\n이상없이 작성하셨으면 Hello world가 랜덤한 Pascal case형태의 영어단어로 변경이 되었을 꺼에요.\n코드를 수정하거나, Hot Reload 버튼을 클릭하면 중앙 텍스트가 계속 변경이 됩니다. 이것은 단어를 선택하는 WordPair.random();코드가 build 함수 안에 있기 때문입니다.\nMaterialApp에 렌더링이 필요할때나 표시되는 플랫폼이 전환될때 build함수가 호출이 되어서 새로운 단어를 생성하고 적용하고 렌더링을 하게되요.\n3. Stateful Widget 추가하기Stateless란 불변의 의미를 지닙니다. Stateless Widget이란 사용되는 데이터의 값을 변경을 할 수 없는 위젯이며, 한번 지정된 값은 코드가 수정되지 않는한 변경을 할수 없음을 의미합니다.\nStateful Widget은 Stateless Widget과 다르게 불변하지 않으며 상황에 따라 사용하는 값을 변경할 수 있음을 의미합니다.\nStateful Widget은 2개의 클래스가 필요한데요, 하나는 StatefulWidget클래스와 State 클래스 입니다. StatefulWidget은 해당 위젯의 수명주기를 관리하는 State 클래스의 인스턴스를 생성하는 역할을 합니다.  \nRandomWordsState 클래스를 추가해봅니다.\nmain.dartmain.dart123class RandomWordsState extends State&lt;RandomWords&gt; &#123;  // TODO Add build() method&#125;\n\n코드를 보면 RandomWordsState는 RandomWords를 위한 State 클래스를 확장한 것을 알 수 있습니다. 앱의 로직과 상태는 대부분 RandomWords Widget의 상태를 유지합니다.\nRandomWords Widget을 추가해봅니다. RandomWords Widget은 RandomWordsState 클래스의 인스턴스를 만드는 외에 다른 작업은 거의 수행하지 않아요.\nmain.dartmain.dart12345678class RandomWords extends StatefulWidget &#123;  @override  RandomWordsState createState() =&gt; RandomWordsState();&#125;class RandomWordsState extends State&lt;RandomWords&gt; &#123;  // TODO Add build() method&#125;\n\n이후 IDE는 RandomWordsState클래스에 build메소드를 만들라고 알려줍니다. 아래처럼 build 메소드를 생성하고 랜덤한 Text Widget을 반환하도록 작성합니다. \nmain.dartmain.dart123456789101112class RandomWords extends StatefulWidget &#123;  @override  RandomWordsState createState() =&gt; RandomWordsState();&#125;class RandomWordsState extends State&lt;RandomWords&gt; &#123;  @override  Widget build(BuildContext context) &#123;    final wordPair = WordPair.random();    return Text(wordPair.asPascalCase);  &#125;&#125;\n\n이전에 표시를 담당하는 body속성의 Center 안의 child값에 해당 RandomWords위젯을 호출하도록 작성합니다.\nmain.dartmain.dart12345678910111213141516171819class MyApp extends StatelessWidget &#123;  @override  Widget build(BuildContext context) &#123;      final wordPair = WordPair.random();        return MaterialApp(      title: 'Welcome to Flutter',      home: Scaffold(        appBar: AppBar(          title: Text('Welcome to Flutter'),        ),        body: Center(          child: RandomWords(),        ),      ),    );  &#125;&#125;\n\n\n4. 무한 스크롤 리스트 뷰 만들기이 단계에서는 RandomWordsState를 확장하여 단어 목록을 생성하고 표시를 합니다. 사용자가 스크롤 하면 ListView 위젯에 표시된 목록이 무한대로 커집니다.\nListView의 Builder Factory 생성자를 사용하면 필요할 때 Listview를 Lazy하게 빌드 할 수 있습니다.\n단어를 저장하기 위해서 _suggestions라는 WordPair 배열을 선언합니다. 그리고 글꼴의 크기를 크게 하기 위해서 _biggerFont라는 TextStyle 인스턴스 변수를 작성 합니다.\nmain.dartmain.dart12345678910class RandomWordsState extends State&lt;RandomWords&gt; &#123;  final _suggestions = &lt;WordPair&gt;[];  final _biggerFont = const TextStyle(fontSize: 18.0);    @override  Widget build(BuildContext context) &#123;    final wordPair = WordPair.random();    return Text(wordPair.asPascalCase);  &#125;&#125;\n\nJava와는 달리 Dart에는 public, protected, private 키워드가 없습니다. 변수 식별자가 underscore(_)로 시작하면 해당 변수는 해당 라이브러리 내부에서만 사용할 수 있습니다. Java의 private와 유사합니다.\nRandomWordsState 클래스에 _buildSuggestions() 함수를 추가합니다. 이것은 단어를 표시하는 ListView를 작성합니다.\nListView클래스는 익명함수로 지정된 Factory Builder 및 Callback 함수인 builder와 itemBuilder를 제공합니다.ItemBuilder는 2개의 인자를 받는데요, BuildContext와 반복자 i가 전달됩니다. 반복자 i는 0에서 시작해서 해당 함수가 호출될때마다 계속 증가 됩니다. 해당 함수는 스크롤 할때마다 호출이 됩니다.그리고 단어를 표시해주는 ListTile Widget을 홀수로 구역을 분리해주는 선인 Divider는 짝수별로 생성합니다.\nmain.dartmain.dart12345678910111213141516Widget _buildSuggestions() &#123;    return ListView.builder(      itemBuilder: (context, i) &#123;        // 반복자 i가 짝수일때 divider를 반환한다.        if(i.isOdd) return Divider();                // 이 표현식은 i를 2로 나누고 나는 목의 값을 반환합니다.        final index = i ~/ 2;         // List에 표시되는 단어의 수가 _suggestion수보다 클때 다시 _suggestion에 10개의 단어를 추가합니다.        if(index &gt;= _suggestions.length) &#123;            _suggestions.addAll(generateWordPairs().take(10));        &#125;        return _buildRow(_suggestions[index]);      &#125;    );  &#125;\n\n_buildSuggestions함수는 단어당 한번씩 _buildRow()함수를 호출 합니다. _buildRow함수를 만들어 봅니다.\nmain.dartmain.dart12345678Widget _buildRow(WordPair pair) &#123;  return ListTile(    title: Text(      pair.asPascalCase,      style: _biggerFont,    ),  );&#125;\n\nRandomWordsState 클래스에서 단어를 생성하는 부분을_buildSuggestions()를 사용해서 ListView Widget을 반환하도록 수정합니다. Scaffold도 Widget이기 때문에 이전 MyApp에서 사용했던 Scaffold를 RandomWordState에서도 사용할 수 있습니다.\nmain.dartmain.dart123456789@overrideWidget build(BuildContext context) &#123;  return Scaffold(    appBar: AppBar(      title : Text('infinite Scroll Word'),    ),    body : _buildSuggestions()  );&#125;\n\n그리고 MyApp의 build부분의 MaterialApp의 home속성 부분을 stateful widget RandomWords으로 수정해줍니다.\nmain.dartmain.dart123456789101112class MyApp extends StatelessWidget &#123;  @override  Widget build(BuildContext context) &#123;      final wordPair = WordPair.random();        return MaterialApp(      title: 'Welcome to Flutter',      home: RandomWords()    );  &#125;&#125;\n\n여기까지 이상없이 작성하셨으면 무한 스크롤되는 앱이 동작을 하게 됩니다.\n지금 까지 실행한 앱은 디버그 모드로 작성이 되어서 여러 큰 리소스를 사용하여 빠르게 개발을 도와줍니다. 만약에 앱을 출시하거나 성능을 분석하기 위해서라면 Flutter’s profile or release builds를 사용해야 합니다. \n자세한 정보는 여기(https://flutter.dev/docs/testing/build-modes) 에서 참고 하시기 바래요.\n다음 장에서는 해당 앱에 기능을 더 붙이도록 하겠습니다.\n읽어주셔서 감사합니다. 좋은 하루 보내세요.","dateCreated":"2019-07-20T10:37:00+09:00","dateModified":"2019-07-20T18:42:15+09:00","datePublished":"2019-07-20T10:37:00+09:00","description":"간단한 나의 최초 Flutter App을 만들어 보아요.","headline":"나의 최초 플루터 앱 Part1","image":["https://flutter.dev/images/catalog-widget-placeholder.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"},"publisher":{"@type":"Organization","name":"Borris Cho","sameAs":["https://github.com/agoalofglory","https://stackoverflow.com/users/11778793/agoalofglory","https://twitter.com/","https://www.facebook.com/glory.cho.165","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"],"image":"profile.PNG","logo":{"@type":"ImageObject","url":"profile.PNG"}},"url":"http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/","keywords":"flutter","thumbnailUrl":"https://flutter.dev/images/catalog-widget-placeholder.png"}</script>
+    <meta name="description" content="간단한 나의 최초 Flutter App을 만들어 보아요.">
+<meta name="keywords" content="flutter">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="나의 최초 플루터 앱 Part1">
+<meta property="og:url" content="http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/index.html">
+<meta property="og:site_name" content="A Goal Of Glory Blog">
+<meta property="og:description" content="간단한 나의 최초 Flutter App을 만들어 보아요.">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2019-07-20T09:42:15.232Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="나의 최초 플루터 앱 Part1">
+<meta name="twitter:description" content="간단한 나의 최초 Flutter App을 만들어 보아요.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://yoursite.com/assets/images/profile.PNG"/>
+    
+    
+        <meta property="og:image" content="https://flutter.dev/images/catalog-widget-placeholder.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://flutter.dev/images/catalog-widget-placeholder.png"/>
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-gqvv472odcrr52vraz9f6lgiuo2hyjabbfgggxn4x9qhbnaskdtckibmxkwx.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144177202-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-144177202-1');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            A Goal Of Glory Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/profile.PNG" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.PNG" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Borris Cho</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>욕심덩어리 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="카테고리"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="태그"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="아카이브"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="검색"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/agoalofglory" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://stackoverflow.com/users/11778793/agoalofglory" target="_blank" rel="noopener" title="Stack Overflow">
+                    
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="noopener" title="Twitter">
+                    
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://www.facebook.com/glory.cho.165" target="_blank" rel="noopener" title="Facebook">
+                    
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://plus.google.com/" target="_blank" rel="noopener" title="Google +">
+                    
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://www.linkedin.com/profile/" target="_blank" rel="noopener" title="LinkedIn">
+                    
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/mailto"
+                            title="Mail"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-center">
+    
+        <h1 class="post-title">
+            나의 최초 플루터 앱 Part1
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-07-20T10:37:00+09:00">
+	
+		    2019/07/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/flutter/">flutter</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<blockquote>
+<p>해당 소스는 Flutter 공식 사이트를 참고 했어요.</p>
+</blockquote>
+<p>객체지향코드와 기본적인 프로그래밍에 익숙하다면 이번장에서 만드는 Flutter 코드가 이해가 될꺼라 생각이 들어요.</p>
+<p>만들어볼 앱은 제한이 없는 스크롤 리스트 입니다. 여기서 배워갈 점은 아래와 같아요.</p>
+<ol>
+<li>Flutter App을 작성하는 방법.</li>
+<li>Flutter App의 기본 구조.</li>
+<li>검색과 패키지들을 사용해서 기능을 확장하는 방법.</li>
+<li>빠른 개발을 Hot reload 사용 방법.</li>
+<li>Stateful widget을 개발하는 방법.</li>
+<li>무한하고 lazy하게 로드된 리스트를 생성하는 방법.</li>
+</ol>
+<h2 id="Flutter-App-만들기"><a href="#Flutter-App-만들기" class="headerlink" title="Flutter App 만들기"></a>Flutter App 만들기</h2><p>새로운 플루터 앱을 만들어 봅니다. 이름은 flutter_first_app 할께요.</p>
+<p>이상 없이 생성이 되면 에뮬레이터를 실행시키고 새로 생성된 Flutter app을 기동시키세요.</p>
+<p>우하단에 파란색 버튼과 You have pushed the button this many time: 0이라는 글씨가 중앙에 뜬 앱이 보인다면 이상없이 기본 Flutter App이 기동이 된거에요.</p>
+<h3 id="1-lib-main-dart파일을-아래-코드로-변경해주세요"><a href="#1-lib-main-dart파일을-아래-코드로-변경해주세요" class="headerlink" title="1. lib/main.dart파일을 아래 코드로 변경해주세요."></a>1. lib/main.dart파일을 아래 코드로 변경해주세요.</h3><figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() =&gt; runApp(MyApp());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">'Welcome to Flutter'</span>,</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          title: Text(<span class="string">'Welcome to Flutter'</span>),</span><br><span class="line">        ),</span><br><span class="line">        body: Center(</span><br><span class="line">          child: Text(<span class="string">'Hello World'</span>),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Hot Reload기능으로 인해서 코드를 저장시 실행된 애뮬레이터에 해당 코드가 반영됨을 확인 할 수 있어요. Hello World가 중앙에 뜨면 이상없이 적용이 된거에요.</p>
+<p><strong>확인</strong></p>
+<ul>
+<li>Material App을 만들었습니다. Material은 모바일과 웹에서 시각적인 디자인 언어에요, Flutter는 많은 Material Widget들을 제공해줍니다.</li>
+<li>Main 함수에서 Arrow(=&gt;) 표기법을 사용했어요. 한줄에서 표현이 가능한 함수나 메소드는 Arrow를 사용하세요.</li>
+<li>MyApp은 StatelessWidget을 확장한 Widget이에요. Flutter는 대부분이 Widget입니다. alignment, padding, layout도 Widget이에요.</li>
+<li>Scaffold Widget을 사용했어요. 이건 기본적으로 AppBar, Title 속성 및 Home Screen 영역을 담당하고 자식 Widget Tree를 유지하는 body 속성을 제공합니다.</li>
+<li>Widget의 주요 작업은 build() 함수를 제공하는 거에요. build는 위젯을 어떻게 표시할지에 대한 코드들이 작성이 된답니다.</li>
+<li>예제에서는 Center Widget을 사용해서 수직, 수평으로 중앙에 Text Widget을 표시해주고 있습니다.</li>
+</ul>
+<h3 id="2-외부-패키지-사용하기"><a href="#2-외부-패키지-사용하기" class="headerlink" title="2. 외부 패키지 사용하기"></a>2. 외부 패키지 사용하기</h3><p>english_word라는 외부 패키지를 사용해봐요. english_word는 가장 많이 사용되는 영어단어의 제공과 몇몇의 기능을 제공합니다.</p>
+<p>Flutter Pub(<a href="https://pub.dev/flutter" target="_blank" rel="noopener">https://pub.dev/flutter</a>) 사이트에서 사람들이 올려놓은 외부 패키지를 검색해보세요. english_word를 검색해보세요.</p>
+<p>아래처럼 pubspec.yaml에 english_word를 작성합니다.</p>
+<figure class="highlight yaml"><figcaption><span>pubspec.yaml</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">pubspec.yaml</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies:</span></span><br><span class="line"><span class="attr">  flutter:</span></span><br><span class="line"><span class="attr">    sdk:</span> <span class="string">flutter</span></span><br><span class="line"><span class="attr">  english_words:</span> <span class="string">^3.1.0</span></span><br></pre></td></tr></table></figure>
+
+<p>이상없이 추가 되면 ‘flutter pub get’을 터미널에 입력하거나 Tool에 표시되는 ‘package get’을 눌러봐요. 이건 선언한 소스를 앱에서 사용할 수 있게 다운받고 설정을 합니다. 이것은 pubspec.lock을 자동으로 생성하며 프로젝트에 끌어온 모든 패키지의 목록을 파일로 저장하고 버전 관리 합니다.</p>
+<p>아래와 같이 main.dart에 english_word를 선언 해보죠.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:english_words/english_words.dart'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>자 english_word를 사용하여 Hello world를 english_word가 제공해주는 단어로 변경해보죠.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> wordPair = WordPair.random();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">'Welcome to Flutter'</span>,</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          title: Text(<span class="string">'Welcome to Flutter'</span>),</span><br><span class="line">        ),</span><br><span class="line">        body: Center(</span><br><span class="line">          child: Text(wordPair.asPascalCase),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이상없이 작성하셨으면 Hello world가 랜덤한 Pascal case형태의 영어단어로 변경이 되었을 꺼에요.</p>
+<p>코드를 수정하거나, Hot Reload 버튼을 클릭하면 중앙 텍스트가 계속 변경이 됩니다. 이것은 단어를 선택하는 WordPair.random();코드가 build 함수 안에 있기 때문입니다.</p>
+<p>MaterialApp에 렌더링이 필요할때나 표시되는 플랫폼이 전환될때 build함수가 호출이 되어서 새로운 단어를 생성하고 적용하고 렌더링을 하게되요.</p>
+<h3 id="3-Stateful-Widget-추가하기"><a href="#3-Stateful-Widget-추가하기" class="headerlink" title="3. Stateful Widget 추가하기"></a>3. Stateful Widget 추가하기</h3><p>Stateless란 불변의 의미를 지닙니다. Stateless Widget이란 사용되는 데이터의 값을 변경을 할 수 없는 위젯이며, 한번 지정된 값은 코드가 수정되지 않는한 변경을 할수 없음을 의미합니다.</p>
+<p>Stateful Widget은 Stateless Widget과 다르게 불변하지 않으며 상황에 따라 사용하는 값을 변경할 수 있음을 의미합니다.</p>
+<p>Stateful Widget은 2개의 클래스가 필요한데요, 하나는 StatefulWidget클래스와 State 클래스 입니다. StatefulWidget은 해당 위젯의 수명주기를 관리하는 State 클래스의 인스턴스를 생성하는 역할을 합니다.  </p>
+<p>RandomWordsState 클래스를 추가해봅니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWordsState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">RandomWords</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">// TODO Add build() method</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>코드를 보면 RandomWordsState는 RandomWords를 위한 State 클래스를 확장한 것을 알 수 있습니다. 앱의 로직과 상태는 대부분 RandomWords Widget의 상태를 유지합니다.</p>
+<p>RandomWords Widget을 추가해봅니다. RandomWords Widget은 RandomWordsState 클래스의 인스턴스를 만드는 외에 다른 작업은 거의 수행하지 않아요.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWords</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  RandomWordsState createState() =&gt; RandomWordsState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWordsState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">RandomWords</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">// TODO Add build() method</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이후 IDE는 RandomWordsState클래스에 build메소드를 만들라고 알려줍니다. 아래처럼 build 메소드를 생성하고 랜덤한 Text Widget을 반환하도록 작성합니다. </p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWords</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  RandomWordsState createState() =&gt; RandomWordsState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWordsState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">RandomWords</span>&gt; </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> wordPair = WordPair.random();</span><br><span class="line">    <span class="keyword">return</span> Text(wordPair.asPascalCase);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이전에 표시를 담당하는 body속성의 Center 안의 child값에 해당 RandomWords위젯을 호출하도록 작성합니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">final</span> wordPair = WordPair.random();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">'Welcome to Flutter'</span>,</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          title: Text(<span class="string">'Welcome to Flutter'</span>),</span><br><span class="line">        ),</span><br><span class="line">        body: Center(</span><br><span class="line">          child: RandomWords(),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="4-무한-스크롤-리스트-뷰-만들기"><a href="#4-무한-스크롤-리스트-뷰-만들기" class="headerlink" title="4. 무한 스크롤 리스트 뷰 만들기"></a>4. 무한 스크롤 리스트 뷰 만들기</h3><p>이 단계에서는 RandomWordsState를 확장하여 단어 목록을 생성하고 표시를 합니다. 사용자가 스크롤 하면 ListView 위젯에 표시된 목록이 무한대로 커집니다.</p>
+<p>ListView의 Builder Factory 생성자를 사용하면 필요할 때 Listview를 Lazy하게 빌드 할 수 있습니다.</p>
+<p>단어를 저장하기 위해서 _suggestions라는 WordPair 배열을 선언합니다. 그리고 글꼴의 크기를 크게 하기 위해서 _biggerFont라는 TextStyle 인스턴스 변수를 작성 합니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomWordsState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">RandomWords</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> _suggestions = &lt;WordPair&gt;[];</span><br><span class="line">  <span class="keyword">final</span> _biggerFont = <span class="keyword">const</span> TextStyle(fontSize: <span class="number">18.0</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> wordPair = WordPair.random();</span><br><span class="line">    <span class="keyword">return</span> Text(wordPair.asPascalCase);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Java와는 달리 Dart에는 public, protected, private 키워드가 없습니다. 변수 식별자가 underscore(_)로 시작하면 해당 변수는 해당 라이브러리 내부에서만 사용할 수 있습니다. Java의 private와 유사합니다.</p>
+<p>RandomWordsState 클래스에 _buildSuggestions() 함수를 추가합니다. 이것은 단어를 표시하는 ListView를 작성합니다.</p>
+<p>ListView클래스는 익명함수로 지정된 Factory Builder 및 Callback 함수인 builder와 itemBuilder를 제공합니다.<br>ItemBuilder는 2개의 인자를 받는데요, BuildContext와 반복자 i가 전달됩니다. 반복자 i는 0에서 시작해서 해당 함수가 호출될때마다 계속 증가 됩니다. 해당 함수는 스크롤 할때마다 호출이 됩니다.<br>그리고 단어를 표시해주는 ListTile Widget을 홀수로 구역을 분리해주는 선인 Divider는 짝수별로 생성합니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Widget _buildSuggestions() &#123;</span><br><span class="line">    <span class="keyword">return</span> ListView.builder(</span><br><span class="line">      itemBuilder: (context, i) &#123;</span><br><span class="line">        <span class="comment">// 반복자 i가 짝수일때 divider를 반환한다.</span></span><br><span class="line">        <span class="keyword">if</span>(i.isOdd) <span class="keyword">return</span> Divider();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 이 표현식은 i를 2로 나누고 나는 목의 값을 반환합니다.</span></span><br><span class="line">        <span class="keyword">final</span> index = i ~/ <span class="number">2</span>; </span><br><span class="line">        <span class="comment">// List에 표시되는 단어의 수가 _suggestion수보다 클때 다시 _suggestion에 10개의 단어를 추가합니다.</span></span><br><span class="line">        <span class="keyword">if</span>(index &gt;= _suggestions.length) &#123;  </span><br><span class="line">          _suggestions.addAll(generateWordPairs().take(<span class="number">10</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> _buildRow(_suggestions[index]);</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>_buildSuggestions함수는 단어당 한번씩 _buildRow()함수를 호출 합니다. _buildRow함수를 만들어 봅니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Widget _buildRow(WordPair pair) &#123;</span><br><span class="line">  <span class="keyword">return</span> ListTile(</span><br><span class="line">    title: Text(</span><br><span class="line">      pair.asPascalCase,</span><br><span class="line">      style: _biggerFont,</span><br><span class="line">    ),</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RandomWordsState 클래스에서 단어를 생성하는 부분을_buildSuggestions()를 사용해서 ListView Widget을 반환하도록 수정합니다. Scaffold도 Widget이기 때문에 이전 MyApp에서 사용했던 Scaffold를 RandomWordState에서도 사용할 수 있습니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span></span><br><span class="line">Widget build(BuildContext context) &#123;</span><br><span class="line">  <span class="keyword">return</span> Scaffold(</span><br><span class="line">    appBar: AppBar(</span><br><span class="line">      title : Text(<span class="string">'infinite Scroll Word'</span>),</span><br><span class="line">    ),</span><br><span class="line">    body : _buildSuggestions()</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>그리고 MyApp의 build부분의 MaterialApp의 home속성 부분을 stateful widget RandomWords으로 수정해줍니다.</p>
+<figure class="highlight dart"><figcaption><span>main.dart</span><a href="http://underscorejs.org/#compact" target="_blank" rel="noopener">main.dart</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">final</span> wordPair = WordPair.random();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">'Welcome to Flutter'</span>,</span><br><span class="line">      home: RandomWords()</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>여기까지 이상없이 작성하셨으면 무한 스크롤되는 앱이 동작을 하게 됩니다.</p>
+<p>지금 까지 실행한 앱은 디버그 모드로 작성이 되어서 여러 큰 리소스를 사용하여 빠르게 개발을 도와줍니다. 만약에 앱을 출시하거나 성능을 분석하기 위해서라면 Flutter’s profile or release builds를 사용해야 합니다. </p>
+<p>자세한 정보는 여기(<a href="https://flutter.dev/docs/testing/build-modes" target="_blank" rel="noopener">https://flutter.dev/docs/testing/build-modes</a>) 에서 참고 하시기 바래요.</p>
+<p>다음 장에서는 해당 앱에 기능을 더 붙이도록 하겠습니다.</p>
+<p>읽어주셔서 감사합니다. 좋은 하루 보내세요.</p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/flutter/">flutter</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/07/20/2019/20190720_02_Flutter_First_App/"
+                    data-tooltip="나의 최초 플루터 앱 Part2"
+                    aria-label="이전: 나의 최초 플루터 앱 Part2"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/07/13/2019/20190713_01_Flutter_Intro/"
+                    data-tooltip="앱개발을 위한 Flutter를 소개합니다."
+                    aria-label="다음: 앱개발을 위한 Flutter를 소개합니다."
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Borris Cho. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/07/20/2019/20190720_02_Flutter_First_App/"
+                    data-tooltip="나의 최초 플루터 앱 Part2"
+                    aria-label="이전: 나의 최초 플루터 앱 Part2"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/07/13/2019/20190713_01_Flutter_Intro/"
+                    data-tooltip="앱개발을 위한 Flutter를 소개합니다."
+                    aria-label="다음: 앱개발을 위한 Flutter를 소개합니다."
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=http://yoursite.com/2019/07/20/2019/20190720_01_Flutter_First_App/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.PNG" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Borris Cho</h4>
+        
+            <div id="about-card-bio"><p>욕심덩어리 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Developer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                korea
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-inu4udxowwq0dqpayvalaw6gavhwe2j0wdiv7yje25pla1hwpd8pmmveiiet.min.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

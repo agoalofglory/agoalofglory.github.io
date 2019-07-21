@@ -1,6 +1,6 @@
 ---
 title: "앱개발을 위한 Flutter를 소개합니다."
-date: 2018-07-13 14:16:00
+date: 2019-07-13 14:16:00
 categories:
 - flutter
 tags:
@@ -9,8 +9,8 @@ keywords:
 - intro
 - flutter
 autoThumbnailImage: false
-thumbnailImagePosition: "bottom"
-thumbnailImage: https://1.bp.blogspot.com/-mxRgT-L-muc/XSlrNrvfOYI/AAAAAAAAABE/qH71SYCSzwAF4Wms1i8xlK9w52j9Gr_ZQCLcBGAs/s1600/1.PNG
+thumbnailImagePosition: left
+thumbnailImage: https://flutter.dev/images/catalog-widget-placeholder.png
 metaAlignment: center
 ---
 

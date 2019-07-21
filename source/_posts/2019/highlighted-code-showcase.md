@@ -9,7 +9,7 @@ tags:
 - github theme
 thumbnailImagePosition: left
 thumbnailImage: http://d1u9biwaxjngwg.cloudfront.net/highlighted-code-showcase/peak-140.jpg
----
+---fsadf
 
 Tranquilpeak Hexo theme have its own theme to highlight source code. It's based on GitHub theme: simple and elegant. Check out how it sublimate source codes.
 
